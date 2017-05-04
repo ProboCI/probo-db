@@ -1,0 +1,10 @@
+#! /usr/bin/env node
+'use strict';
+
+const probodb = require('..');
+const Riker = require('riker');
+const ServerCommand = probodb.commands.ServerCommand;
+
+const riker = new Riker();
+riker.addSubCommand('server', new ServerCommand());
+riker.run();

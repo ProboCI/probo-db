@@ -1,0 +1,28 @@
+{
+  "name": "probo-db",
+  "version": "0.0.0",
+  "description": "An open source database for storing probo build data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ProboCI/probo-db.git"
+  },
+  "keywords": [
+    "probo"
+  ],
+  "author": "Howard Tyson <howard@howardtyson.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ProboCI/probo-db/issues"
+  },
+  "homepage": "https://github.com/ProboCI/probo-db#readme",
+  "dependencies": {
+    "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
+    "probo-eventbus": "^1.0.3",
+    "riker": "^1.1.0",
+    "through2": "^2.0.3"
+  }
+}
