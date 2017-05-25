@@ -1,0 +1,6 @@
+---
+dbUser: probodb
+dbPassword: password
+dbName: probodb
+dbType: postgres
+dbHost: localhost

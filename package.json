@@ -21,8 +21,11 @@
   "homepage": "https://github.com/ProboCI/probo-db#readme",
   "dependencies": {
     "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
+    "knex": "^0.13.0",
+    "pg": "^6.2.2",
     "probo-eventbus": "^1.0.3",
     "riker": "^1.1.0",
-    "through2": "^2.0.3"
+    "through2": "^2.0.3",
+    "yaml-config-loader": "^2.0.1"
   }
 }
