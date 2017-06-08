@@ -1,7 +1,6 @@
 #! /usr/bin/env node
 'use strict';
 
-const Riker = require('riker');
 const util = require('util');
 const path = require('path');
 const Loader = require('yaml-config-loader');
@@ -34,12 +33,7 @@ if (argv.config) {
 loader.addAndNormalizeObject({});
 
 loader.load(function(error, config) {
-  let db = new Db(config);
+  const db = new Db(config);
   let server = new Server({config, db});
   server.start();
-  // const riker = new Riker();
-  // let serverCommand = new ServerCommand();
-  // ServerCommand.configure(config);
-  // riker.addSubCommand('server', serverCommand);
-  // riker.run();
 });

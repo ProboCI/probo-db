@@ -1,6 +1,9 @@
 ---
-dbUser: probodb
-dbPassword: password
-dbName: probodb
-dbType: postgres
-dbHost: localhost
+dbUser: 'probodb'
+dbPassword: 'password'
+dbName: 'probodb'
+dbType: 'postgres'
+dbHost: 'localhost'
+eventGroup: 'proboDb'
+eventTopic: 'build_events'
+eventVersion: 1
