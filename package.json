@@ -24,7 +24,6 @@
     "knex": "^0.13.0",
     "pg": "^6.2.2",
     "probo-eventbus": "^1.0.3",
-    "riker": "^1.1.0",
     "through2": "^2.0.3",
     "yaml-config-loader": "^2.0.1"
   }
