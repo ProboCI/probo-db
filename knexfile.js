@@ -1,20 +1,12 @@
-// Update with your config settings.
-
 module.exports = {
 
-  development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './dev.sqlite3'
-    }
-  },
-
-  staging: {
+  test: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: 'probodb_test',
+      user:     'probodb_test',
+      password: 'password',
+      host: 'localhost'
     },
     pool: {
       min: 2,
@@ -30,7 +22,8 @@ module.exports = {
     connection: {
       database: 'probodb',
       user:     'probodb',
-      password: 'password'
+      password: 'password',
+      host: 'localhost'
     },
     pool: {
       min: 2,

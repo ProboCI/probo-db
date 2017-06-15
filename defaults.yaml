@@ -7,3 +7,4 @@ dbHost: 'localhost'
 eventGroup: 'proboDb'
 eventTopic: 'build_events'
 eventVersion: 1
+knex: {}

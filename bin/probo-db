@@ -7,14 +7,18 @@ const Loader = require('yaml-config-loader');
 const yargs = require('yargs');
 const loader = new Loader();
 
+const knexConfig = require('../knexfile');
 const probodb = require('..');
 const Server = probodb.lib.Server;
 const Db = probodb.lib.Db;
+let knexOverride = {};
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 const argv = yargs
   .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
   .alias('config', 'c')
+  .alias('knexfile', 'k')
   .argv;
 
 loader.on('error', function(error) {
@@ -30,10 +34,15 @@ if (argv.config) {
   loader.add(path.resolve(argv.config));
 }
 
-loader.addAndNormalizeObject({});
+if (argv.knexfile) {
+  knexOverride = require(argv.knexfile);
+  Object.assign(knexConfig, knexOverride);
+}
+
+loader.addAndNormalizeObject({knex: knexConfig});
 
 loader.load(function(error, config) {
-  const db = new Db(config);
+  const db = new Db(config.knex[process.env.NODE_ENV]);
   let server = new Server({config, db});
   server.start();
 });
