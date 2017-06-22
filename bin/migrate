@@ -1,0 +1,4 @@
+#! /bin/bash
+
+./bin/mergeMigrations
+node_modules/.bin/knex-migrate up --env production

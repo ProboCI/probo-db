@@ -42,7 +42,12 @@ if (argv.knexfile) {
 loader.addAndNormalizeObject({knex: knexConfig});
 
 loader.load(function(error, config) {
-  const db = new Db(config.knex[process.env.NODE_ENV]);
-  let server = new Server({config, db});
+  const knex = require('knex')(config.knex[process.env.NODE_ENV]);
+  const db = new Db(knex);
+  const dbPluginClasses = require(config.pluginDirectory).dbPlugins;
+  const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
+    return new dbPluginClass(knex);
+  });
+  const server = new Server({config, db, dbPlugins});
   server.start();
 });
