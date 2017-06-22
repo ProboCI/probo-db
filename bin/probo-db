@@ -44,7 +44,8 @@ loader.addAndNormalizeObject({knex: knexConfig});
 loader.load(function(error, config) {
   const knex = require('knex')(config.knex[process.env.NODE_ENV]);
   const db = new Db(knex);
-  const dbPluginClasses = require(config.pluginDirectory).dbPlugins;
+  const dbPluginClasses = config.pluginDirectory !== null ? require(config.pluginDirectory).dbPlugins : [];
+
   const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
     return new dbPluginClass(knex);
   });

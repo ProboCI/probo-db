@@ -7,5 +7,5 @@ dbHost: 'localhost'
 eventGroup: 'proboDb'
 eventTopic: 'build_events'
 eventVersion: 1
-pluginDirectory: '/workspace/probo-db-plugins'
+pluginDirectory: null
 knex: {}

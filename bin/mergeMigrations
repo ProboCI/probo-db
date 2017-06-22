@@ -32,7 +32,7 @@ loader.addAndNormalizeObject({});
 loader.load(function(error, config) {
   let baseMigrationDir = path.resolve(path.join(__dirname, '..', 'baseMigrations'));
   let migrationDir = path.resolve(path.join(__dirname, '..', 'migrations'));
-  let pluginMigrationDir = path.resolve(path.join(config.pluginDirectory, 'migrations'));
+  let pluginMigrationDir = config.pluginDirectory !== null ? path.resolve(path.join(config.pluginDirectory, 'migrations')) : null;
 
   fs.readdir(baseMigrationDir, function(error, files) {
     if (error) {
@@ -45,13 +45,16 @@ loader.load(function(error, config) {
 
     });
   });
-  fs.readdir(pluginMigrationDir, function(error, files) {
-    if (error) {
-      console.log(error);
-      process.exit(1);
-    }
-    files.forEach(function(file) {
-      fs.createReadStream(path.join(pluginMigrationDir, file))
-        .pipe(fs.createWriteStream(path.join(migrationDir, file)));    });
-  });
+
+  if (pluginMigrationDir) {
+    fs.readdir(pluginMigrationDir, function(error, files) {
+      if (error) {
+        console.log(error);
+        process.exit(1);
+      }
+      files.forEach(function(file) {
+        fs.createReadStream(path.join(pluginMigrationDir, file))
+          .pipe(fs.createWriteStream(path.join(migrationDir, file)));    });
+    });
+  }
 });
