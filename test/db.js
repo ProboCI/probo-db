@@ -37,7 +37,7 @@ describe('Insert build record', function() {
 
   describe('Db functions', function() {
     it('should save a build', function(done) {
-      let db = new Db(config);
+      let db = new Db({knex});
       db.saveBuild(builds[0])
         .then(function() {
           return verifyBuild(builds[0].id);
