@@ -40,9 +40,13 @@ if (argv.knexfile) {
   Object.assign(knexConfig, knexOverride);
 }
 
-loader.addAndNormalizeObject({knex: knexConfig});
+loader.addAndNormalizeObject({knexFile: knexConfig});
 
 loader.load(function(error, config) {
+  // We allow knex settings to be specified in many places. If there are
+  // multiple options, our externally specified yaml file takes prioerity over
+  // an externally specified knexfile.js.
+  const knexConfig = Object.assign({}, config.knexFile, config.knex);
   const knex = require('knex')(config.knex[process.env.NODE_ENV]);
   const db = new Db({knex, logger});
   const dbPluginClasses = config.pluginDirectory !== null ? require(config.pluginDirectory).dbPlugins : [];
