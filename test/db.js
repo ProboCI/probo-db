@@ -38,7 +38,7 @@ describe('Insert build record', function() {
   describe('Db functions', function() {
     it('should save a build', function(done) {
       let db = new Db(config);
-      db.saveBuld(builds[0])
+      db.saveBuild(builds[0])
         .then(function() {
           return verifyBuild(builds[0].id);
         })
