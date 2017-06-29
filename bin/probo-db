@@ -48,6 +48,7 @@ loader.load(function(error, config) {
   const dbPluginClasses = config.pluginDirectory !== null ? require(config.pluginDirectory).dbPlugins : [];
 
   const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
+    logger.info('loaded plugin: ' + dbPluginClass.name);
     return new dbPluginClass({knex, logger});
   });
   const server = new Server({config, db, dbPlugins, logger});
