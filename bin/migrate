@@ -3,11 +3,53 @@
 MY_PATH="`dirname \"$0\"`"              # relative
 MY_PATH="`( cd \"$MY_PATH\" && pwd )`"  # absolutized and normalized
 
-./bin/mergeMigrations
-if [[ -z $1 ]]; then
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      echo "Handles merging migrations from plugins and running them."
+      echo " "
+      echo "options:"
+      echo "-h, --help  show help"
+      echo "-c,         specify the full path to config.yaml to use."
+      echo "-k,         specify the full path to the knexfile to use."
+      exit 0
+      ;;
+    -c)
+      shift
+      if test $# -gt 0; then
+        config=$1
+      else
+	echo "no config specified"
+	exit 1
+      fi
+      shift
+      ;;
+    -k)
+      shift
+      if test $# -gt 0; then
+        knexfile=$1
+      else
+	echo "no knexfile specified"
+	exit 1
+      fi
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [[ -z $config ]]; then
+  ./bin/mergeMigrations
+else
+  ./bin/mergeMigrations -c $config
+fi
+
+if [[ -z $knexfile ]]; then
   node_modules/.bin/knex-migrate up --env production
 else
-  cp $1 $MY_PATH/../alt-knex.js
+  cp $knexfile $MY_PATH/../alt-knex.js
   node_modules/.bin/knex-migrate up --env production --knexfile $MY_PATH/../alt-knex.js
   rm $MY_PATH/../alt-knex.js
 fi
