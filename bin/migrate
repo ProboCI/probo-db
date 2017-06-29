@@ -1,0 +1,13 @@
+#! /bin/bash
+
+MY_PATH="`dirname \"$0\"`"              # relative
+MY_PATH="`( cd \"$MY_PATH\" && pwd )`"  # absolutized and normalized
+
+./bin/mergeMigrations
+if [[ -z $1 ]]; then
+  node_modules/.bin/knex-migrate up --env production
+else
+  cp $1 $MY_PATH/../alt-knex.js
+  node_modules/.bin/knex-migrate up --env production --knexfile $MY_PATH/../alt-knex.js
+  rm $MY_PATH/../alt-knex.js
+fi

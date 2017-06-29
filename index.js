@@ -1,2 +1,3 @@
-module.exports = require('./lib');
-module.exports.commands = require('./commands');
+'use strict';
+
+module.exports.lib = require('./lib');

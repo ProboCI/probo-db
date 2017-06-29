@@ -1,10 +1,56 @@
 #! /usr/bin/env node
 'use strict';
 
-const probodb = require('..');
-const Riker = require('riker');
-const ServerCommand = probodb.commands.ServerCommand;
+const util = require('util');
+const path = require('path');
+const Loader = require('yaml-config-loader');
+const yargs = require('yargs');
+const loader = new Loader();
 
-const riker = new Riker();
-riker.addSubCommand('server', new ServerCommand());
-riker.run();
+const knexConfig = require('../knexfile');
+const probodb = require('..');
+const Server = probodb.lib.Server;
+const Db = probodb.lib.Db;
+const logger = require('../lib/logger').getLogger();
+let knexOverride = {};
+
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+
+const argv = yargs
+  .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
+  .alias('config', 'c')
+  .alias('knexfile', 'k')
+  .argv;
+
+loader.on('error', function(error) {
+  if (error.name === 'YAMLException') {
+    logger.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
+    logger.error(error);
+  }
+});
+
+loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
+
+if (argv.config) {
+  loader.add(path.resolve(argv.config));
+}
+
+if (argv.knexfile) {
+  knexOverride = require(argv.knexfile);
+  Object.assign(knexConfig, knexOverride);
+}
+
+loader.addAndNormalizeObject({knex: knexConfig});
+
+loader.load(function(error, config) {
+  const knex = require('knex')(config.knex[process.env.NODE_ENV]);
+  const db = new Db({knex, logger});
+  const dbPluginClasses = config.pluginDirectory !== null ? require(config.pluginDirectory).dbPlugins : [];
+
+  const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
+    logger.info('loaded plugin: ' + dbPluginClass.name);
+    return new dbPluginClass({knex, logger});
+  });
+  const server = new Server({config, db, dbPlugins, logger});
+  server.start();
+});
