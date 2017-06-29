@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ProboCI/probo-db#readme",
   "dependencies": {
+    "bunyan": "^1.8.10",
     "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
     "knex": "^0.13.0",
     "knex-migrate": "^1.3.0",

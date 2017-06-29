@@ -17,7 +17,7 @@ const argv = yargs
 loader.on('error', function(error) {
   if (error.name === 'YAMLException') {
     console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -36,7 +36,7 @@ loader.load(function(error, config) {
 
   fs.readdir(baseMigrationDir, function(error, files) {
     if (error) {
-      console.log(error);
+      console.error(error);
       process.exit(1);
     }
     files.forEach(function(file) {
@@ -49,7 +49,7 @@ loader.load(function(error, config) {
   if (pluginMigrationDir) {
     fs.readdir(pluginMigrationDir, function(error, files) {
       if (error) {
-        console.log(error);
+        console.error(error);
         process.exit(1);
       }
       files.forEach(function(file) {
