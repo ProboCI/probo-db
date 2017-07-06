@@ -10,6 +10,7 @@ const loader = new Loader();
 const knexConfig = require('../knexfile');
 const probodb = require('..');
 const Server = probodb.lib.Server;
+const Api = probodb.lib.Api;
 const Db = probodb.lib.Db;
 const logger = require('../lib/logger').getLogger();
 let knexOverride = {};
@@ -55,6 +56,10 @@ loader.load(function(error, config) {
     logger.info('loaded plugin: ' + dbPluginClass.name);
     return new dbPluginClass({knex, logger});
   });
+
   const server = new Server({config, db, dbPlugins, logger});
   server.start();
+
+  const api = new Api({config, db, logger});
+  api.start();
 });
