@@ -50,16 +50,23 @@ loader.load(function(error, config) {
   const knexConfig = Object.assign({}, config.knexFile, config.knex);
   const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
   const db = new Db({knex, logger});
-  const dbPluginClasses = config.pluginDirectory !== null ? require(config.pluginDirectory).dbPlugins : [];
+  const plugins = config.pluginDirectory !== null ? require(config.pluginDirectory) : {dbPlugins: [], apiPlugins: []};
+  const dbPluginClasses = plugins.dbPlugins ? plugins.dbPlugins : [];
+  const apiPluginClasses = plugins.apiPlugins ? plugins.apiPlugins : [];
 
   const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
     logger.info('loaded plugin: ' + dbPluginClass.name);
     return new dbPluginClass({knex, logger});
   });
 
+  const apiPlugins = apiPluginClasses.map(function(apiPluginClass) {
+    logger.info('loaded plugin: ' + apiPluginClass.name);
+    return new apiPluginClass({knex, logger});
+  });
+
   const server = new Server({config, db, dbPlugins, logger});
   server.start();
 
-  const api = new Api({config, db, logger});
+  const api = new Api({config, db, apiPlugins, logger});
   api.start();
 });
