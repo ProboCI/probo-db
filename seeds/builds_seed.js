@@ -9,9 +9,9 @@ function createEntry(build) {
   return {
     branchName: build.branchName,
     branchUrl: 'https://probo.ci',
-    buildId: uuidV4(),
-    bytesReal: 1000,
-    bytesVirtual: 2000,
+    buildId: build.buildId || uuidV4(),
+    bytesReal: 1000 + prNum,
+    bytesVirtual: 2000 + prNum,
     commitRef: 'abc123',
     commitUrl: 'https://probo.ci',
     config: JSON.stringify({}),
@@ -19,7 +19,7 @@ function createEntry(build) {
     prDescription: 'This is a PR',
     prName: build.prName,
     prNumber: prNum,
-    projectId: uuidV4(),
+    projectId: build.projectId || uuidV4(),
     prUrl: 'https://probo.ci',
     reaped: build.reaped,
     reapedDate: new Date(),
@@ -34,15 +34,17 @@ function createEntry(build) {
 }
 
 exports.seed = function(knex, Promise) {
+  // Reset the counter if this is run again.
+  prNum = 0;
   // Deletes ALL existing entries
   return knex('build').del()
     .then(function () {
       return knex('build').insert([
-        createEntry({branchName: 'firstBranch', prName: 'firstPr', reaped: false}),
+        createEntry({branchName: 'firstBranch', prName: 'firstPr', reaped: false, buildId: 'edae5055-db9e-4ae4-8863-7561cb6e0aa2'}),
         createEntry({branchName: 'secondBranch', prName: 'secondPr', reaped: false}),
         createEntry({branchName: 'thirdBranch', prName: 'thirdPr', reaped: false}),
-        createEntry({branchName: 'fourthBranch', prName: 'fourthPr', reaped: false}),
-        createEntry({branchName: 'fifthBranch', prName: 'fifthPr', reaped: false})
+        createEntry({branchName: 'fourthBranch', prName: 'fourthPr', reaped: false, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'}),
+        createEntry({branchName: 'fifthBranch', prName: 'fifthPr', reaped: false, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'})
       ]);
     });
 };
