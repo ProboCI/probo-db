@@ -26,12 +26,15 @@
     "knex-migrate": "^1.3.0",
     "pg": "^6.2.2",
     "probo-eventbus": "^1.0.3",
+    "restify": "^5.0.0",
     "through2": "^2.0.3",
     "yaml-config-loader": "^2.0.1",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
     "mocha": "^3.4.2",
+    "portfinder": "^1.0.13",
+    "request": "^2.81.0",
     "should": "^11.2.1",
     "uuid": "^3.0.1"
   }

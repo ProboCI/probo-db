@@ -7,3 +7,7 @@ buildsEventStream:
     version: 1
 pluginDirectory: null
 knex: {}
+port: 8442
+host: localhost
+serverName: probodb
+version: '1.0.0'
