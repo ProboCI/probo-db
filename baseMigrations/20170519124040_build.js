@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('build', function(table) {
     table.increments();
     table.uuid('buildId').index().unique().notNullable();
-    table.uuid('requestId').index().notNullable();
+    table.uuid('requestId').index();
     table.uuid('projectId').index().notNullable();
     table.dateTime('timeStarted').notNullable();
     table.dateTime('timeUpdated').notNullable();
@@ -15,9 +15,9 @@ exports.up = function(knex, Promise) {
     table.string('branchUrl');
     table.string('commitUrl');
     table.string('commitRef');
-    table.string('prDescription');
+    table.text('prDescription');
     table.string('prUrl');
-    table.string('prName');
+    table.text('prName');
     table.string('prNumber');
     table.boolean('reaped').notNullable().defaultTo(false);
     table.integer('reapedReason').index();
