@@ -25,7 +25,7 @@ exports.up = function(knex, Promise) {
     table.dateTime('reapedDate');
     table.boolean('pinned').notNullable().defaultTo(false);
     table.enu('statusSubmitted', ['pending', 'submitted', 'error', 'paused']).notNullable().defaultTo('pending');
-    table.enu('statusBuild', ['pending', 'running', 'error', 'success', 'failed']).notNullable().defaultTo('pending');
+    table.enu('statusBuild', ['pending', 'running', 'error', 'success', 'failed', 'successful']).notNullable().defaultTo('pending');
   });
 };
 
