@@ -44,7 +44,10 @@ exports.seed = function(knex, Promise) {
         createEntry({branchName: 'secondBranch', prName: 'secondPr', reaped: false}),
         createEntry({branchName: 'thirdBranch', prName: 'thirdPr', reaped: false}),
         createEntry({branchName: 'fourthBranch', prName: 'fourthPr', reaped: false, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'}),
-        createEntry({branchName: 'fifthBranch', prName: 'fifthPr', reaped: false, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'})
+        createEntry({branchName: 'fifthBranch', prName: 'fifthPr', reaped: false, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'}),
+        createEntry({branchName: 'branch6', prName: 'pr6', reaped: true, projectId: 'c01f0f8c-9774-43e7-b717-5ca78bd44c01'}),
+        createEntry({branchName: 'branch7', prName: 'pr7', reaped: true, projectId: '5140b34e-21ed-4395-85bf-f3bda5adaa14'}),
+        createEntry({branchName: 'branch8', prName: 'pr8', reaped: true, projectId: '5140b34e-21ed-4395-85bf-f3bda5adaa14'}),
       ]);
     });
 };
