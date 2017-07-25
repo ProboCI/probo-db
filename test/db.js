@@ -75,7 +75,7 @@ describe('DB', function() {
       db.getBuilds()
         .then(function(result) {
           // This data comes from the seed file.
-          should.equal(5, result.length);
+          should.equal(8, result.length);
           done();
         });
     });
@@ -84,7 +84,7 @@ describe('DB', function() {
       db.getProjects()
         .then(function(result) {
           // This data comes from the seed file.
-          should.equal(4, result.length);
+          should.equal(5, result.length);
           done();
         });
     });

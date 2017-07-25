@@ -16,6 +16,7 @@ const db = new Db({knex});
 
 const projectId = 'c01f0f8c-9774-43e7-b717-5ca78bd44c01';
 const buildId = 'edae5055-db9e-4ae4-8863-7561cb6e0aa2';
+const reapedProjectId = '5140b34e-21ed-4395-85bf-f3bda5adaa14';
 
 const logger = {
   info: function() {return},
@@ -74,7 +75,7 @@ describe('API', function() {
     request.get(`http://localhost:${apiPort}/project`, function(error, response, body) {
       response.statusCode.should.equal(200);
       let data = JSON.parse(response.body);
-      data.length.should.equal(4);
+      data.length.should.equal(5);
       body.should.containEql(projectId);
       done(error);
     });
@@ -90,11 +91,20 @@ describe('API', function() {
     });
   });
 
+  it('returns the number zero for project disk usage if all builds are reaped', function(done) {
+    request.get(`http://localhost:${apiPort}/project/${reapedProjectId}/disk-usage`, function(error, response, body) {
+      response.statusCode.should.equal(200);
+      let data = JSON.parse(response.body);
+      data.should.equal('0');
+      done(error);
+    });
+  });
+
   it('returns an array of builds', function(done) {
     request.get(`http://localhost:${apiPort}/build/`, function(error, response, body) {
       response.statusCode.should.equal(200);
       let data = JSON.parse(response.body);
-      data.length.should.equal(5);
+      data.length.should.equal(8);
       body.should.containEql(buildId);
       done(error);
     });
