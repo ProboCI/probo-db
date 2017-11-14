@@ -16,9 +16,9 @@ exports.up = function(knex, Promise) {
     // @todo: why is this here?  Shouldn't projectId be on a repo or have multiple repoIds or have separate table?
     table.string('repo').notNullable();
     table.uuid('repoId').index().notNullable();
-    tables.jsonb('serviceAuth');
+    table.json('serviceAuth');
     table.string('assetsBucket');
-    tables.jsonb('assetsTokens');
+    table.json('assetsTokens');
   });
 };
 
