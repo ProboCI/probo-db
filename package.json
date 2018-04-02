@@ -23,7 +23,7 @@
     "bunyan": "^1.8.10",
     "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
     "knex": "^0.13.0",
-    "knex-migrate": "^1.3.0",
+    "knex-migrate": "^1.5.0",
     "pg": "^6.2.2",
     "probo-eventbus": "^1.0.3",
     "restify": "^5.0.0",
