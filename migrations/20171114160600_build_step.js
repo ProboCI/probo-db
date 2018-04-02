@@ -1,7 +1,8 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('build_step', function(table) {
-    table.uuid('id').index().unique().notNullable();
+    table.increments();
+    table.uuid('uuid').index().unique().notNullable();
     table.uuid('buildId').index().notNullable();
     table.integer('order').notNullable();
     table.text('description');

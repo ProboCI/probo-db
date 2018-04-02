@@ -1,7 +1,8 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('repo', function(table) {
-    table.uuid('id').index().unique().notNullable();
+    table.increments();
+    table.uuid('uuid').index().unique().notNullable();
     table.timestamp('createdAt').defaultTo(knex.fn.now()).notNullable();
     table.timestamp('updatedAt').defaultTo(knex.fn.now()).notNullable();
     table.string('name');
