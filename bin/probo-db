@@ -12,7 +12,6 @@ const probodb = require('..');
 const Server = probodb.lib.Server;
 const Api = probodb.lib.Api;
 const Db = probodb.lib.Db;
-const Table = probodb.lib.Table;
 const logger = require('../lib/logger').getLogger();
 let knexOverride = {};
 
@@ -55,8 +54,7 @@ loader.load(function(error, config) {
   const apiPluginClasses = plugins.apiPlugins ? plugins.apiPlugins : [];
   const tablePluginClasses = plugins.tablePlugins ? plugins.tablePlugins : [];
 
-  tablePluginClasses.push(require('../lib/Tables/build'));
-  tablePluginClasses.push(require('../lib/Tables/buildOrganization'));
+  tablePluginClasses.push(require('../lib/table/build'));
 
   const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
     logger.info('loaded plugin: ' + dbPluginClass.name);
@@ -73,8 +71,7 @@ loader.load(function(error, config) {
     return new tablePluginClass({knex, logger});
   });
 
-  const table = new Table({knex, logger, tablePlugins});
-  const db = new Db({knex, logger, table});
+  const db = new Db({knex, logger, tablePlugins});
 
   const server = new Server({config, db, dbPlugins, logger});
   server.start();
