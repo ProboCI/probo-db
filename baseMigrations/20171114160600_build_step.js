@@ -1,3 +1,4 @@
+'use strict'
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('build_step', function(table) {
@@ -16,5 +17,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('build_step');
+  return knex.schema.dropTableIfExists('build_step');
 };
