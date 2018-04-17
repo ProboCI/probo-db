@@ -133,8 +133,8 @@ describe('API', function() {
     });
   });
 
-  it('returns id of a newly created build', function(done) {
-    let postData = builds[0];
+  it('creates and deletes a build', function(done) {
+    let postData = Object.assign({}, builds[0]);
     postData.id = undefined;
     postData.bytesReal = postData.diskSpace.realBytes;
     postData.bytesVirtual = postData.diskSpace.virtualBytes;
@@ -144,10 +144,18 @@ describe('API', function() {
     postData.timeStarted = postData.createdAt;
     postData.timeUpdated = postData.updatedAt;
 
+    function deleteBuild(id) {
+      request.del(`http://localhost:${apiPort}/delete/build/${id}`, function(error, response, body) {
+        response.statusCode.should.equal(200);
+        let data = JSON.parse(response.body);
+        data.count.should.equal(1);
+      });
+    }
     request.post({url: `http://localhost:${apiPort}/create/build`, json: postData}, function(error, response, body) {
       response.statusCode.should.equal(200);
-      let data = response.body[0];
-      data.should.have.lengthOf(36);
+      const newBuildId = response.body[0];
+      newBuildId.should.have.lengthOf(36);
+      deleteBuild(newBuildId);
       done(error);
     });
   });
@@ -158,28 +166,19 @@ describe('API', function() {
       bytesVirtual: 23456
     }
 
+    function getBuild(id) {
+      request.get(`http://localhost:${apiPort}/get/build/${id}`, function(error, response, body) {
+        response.statusCode.should.equal(200);
+        let data = JSON.parse(response.body);
+        data.buildId.should.equal(buildId);
+        data.bytesReal.should.equal(putData.bytesReal.toString());
+      });
+    }
     request.put({url: `http://localhost:${apiPort}/update/build/${buildId}`, json: putData}, function(error, response, body) {
       response.statusCode.should.equal(200);
       let data = response.body;
       data.count.should.equal(1);
-      done(error);
-    });
-
-    request.get(`http://localhost:${apiPort}/get/build/${buildId}`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = response.body;
-      data.buildId.should.equal(buildId);
-      data.bytesReal.should.equal(putData.bytesReal);
-      done(error);
-    });
-  });
-
-  it('deleted a build', function(done) {
-    request.del(`http://localhost:${apiPort}/delete/build/${buildId}`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = response.body;
-      console.log(data);
-      //data.should.have.lengthOf(36);
+      getBuild(buildId);
       done(error);
     });
   });
