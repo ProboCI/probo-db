@@ -49,22 +49,36 @@ loader.load(function(error, config) {
   // an externally specified knexfile.js.
   const knexConfig = Object.assign({}, config.knexFile, config.knex);
   const knex = require('knex')(knexConfig[process.env.NODE_ENV]);
-  const db = new Db({knex, logger});
-  const plugins = config.pluginDirectory !== null ? require(config.pluginDirectory) : {dbPlugins: [], apiPlugins: []};
+  const plugins = config.pluginDirectory !== null ? require(config.pluginDirectory) : {buildEventPlugins: [], apiPlugins: [], tablePlugins: []};
+  const buildEventPluginClasses = plugins.buildEventPlugins ? plugins.buildEventPlugins : [];
   const dbPluginClasses = plugins.dbPlugins ? plugins.dbPlugins : [];
   const apiPluginClasses = plugins.apiPlugins ? plugins.apiPlugins : [];
+  const tablePluginClasses = plugins.tablePlugins ? plugins.tablePlugins : [];
 
-  const dbPlugins = dbPluginClasses.map(function(dbPluginClass) {
-    logger.info('loaded plugin: ' + dbPluginClass.name);
-    return new dbPluginClass({knex, logger});
+  // Required table plugins
+  tablePluginClasses.push(require('../lib/table/build'));
+  tablePluginClasses.push(require('../lib/table/buildStep'));
+  tablePluginClasses.push(require('../lib/table/project'));
+  tablePluginClasses.push(require('../lib/table/repo'));
+
+  const buildEventPlugins = buildEventPluginClasses.map(function(buildEventPluginClass) {
+    logger.info('loaded buildEvent plugin: ' + buildEventPluginClass.name);
+    return new buildEventPluginClass({knex, logger});
   });
 
   const apiPlugins = apiPluginClasses.map(function(apiPluginClass) {
-    logger.info('loaded plugin: ' + apiPluginClass.name);
+    logger.info('loaded api plugin: ' + apiPluginClass.name);
     return new apiPluginClass({knex, logger});
   });
 
-  const server = new Server({config, db, dbPlugins, logger});
+  const tablePlugins = tablePluginClasses.map(function(tablePluginClass) {
+    logger.info('loaded table plugin: ' + tablePluginClass.name);
+    return new tablePluginClass({knex, logger});
+  });
+
+  const db = new Db({knex, logger, tablePlugins});
+
+  const server = new Server({config, db, buildEventPlugins, logger});
   server.start();
 
   const api = new Api({config, db, apiPlugins, logger});

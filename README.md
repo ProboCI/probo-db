@@ -1,6 +1,6 @@
 # Probo-DB
 
-A database service that consumes event data from an [eventbus](https://github.com/ProboCI/probo-eventbus) stream and stores it in PostgreSQL.
+A database service that consumes event data from an [eventbus](https://github.com/ProboCI/probo-eventbus) stream and stores it in PostgreSQL.  It also has a rest api for performing crud functions and other tasks.
 
 The database is designed to be able to process and reprocess data from a system such as Apache Kafka. Therefore each step of the data processing and storage pipeline needs to be able to see the same piece of data multiple times without issue.
 
@@ -28,23 +28,31 @@ Since knex and migrations assume a `knexfile.js`, it is recommended to provide t
 
 ## Plugins
 
-The project supports plugins. Plugins should be a separate project and should be referenced by path in the configuration. The plugin project should expose the plugins as properties on the exported object. Database plugins should be called `dbPlugins` and should be in the order they should be run. Api plugins will add routes to the REST API server. They must be added as an array to a property called `apiPlugins`. Order is not important as these will be routes to access data out of band.
+The project supports plugins. Plugins should be a separate project and should be referenced by path in the configuration. The plugin project should expose the plugins as properties on the exported object. Database plugins should be called `buildEventPlugins` and should be in the order they should be run. These are specifically for handling kafka data coming through on the build event pipeline.
+
+Api plugins will add routes to the REST API server. They must be added as an array to a property called `apiPlugins`. Order is not important as these will be routes to access data out of band.
+
+The project also supports tablePLugins which act as a description of a specific table for data storage.  They perform the crud functions and are assumed to be based on the base table plugin class (at /lib/table/baseTable.js).
 
 ```javascript
-const myPlugin = require('./myDbPlugin');
+const myBuildEventPlugin = require('./myBuildEventPlugin');
 const myApiPlugin = require('./myApiPlugin');
+const myTablePlugin = require('./myTablePlugin');
 
 module.exports = {
-  dbPlugins: [
-    myPlugin
+  buildEventPlugins: [
+    myBuildEventPlugin
   ],
   apiPlugins: [
     myApiPlugin
+  ],
+  tablePlugins: [
+    myTablePlugin
   ]
 };
 ```
 
-Each database plugin must export a class that must implements a `process` method. The `process` method will be given a build object which it can then act on. Additionally, the constructor for this class will be handed options that include a logger and a database connection via knex. A valid database plugin might look like the following:
+Each build event plugin must export a class that must implements a `process` method. The `process` method will be given a build object which it can then act on. Additionally, the constructor for this class will be handed options that include a logger and a database connection via knex. A valid database plugin might look like the following:
 
 ```javascript
 class myDbPlugin {
@@ -62,7 +70,7 @@ class myDbPlugin {
   }
 
   prepare(build) {
-	  // extract data and return object.
+    // extract data and return object.
     self.logger.info('Return some feedback');
   }
 }
@@ -101,6 +109,32 @@ class myApiPlugin {
 }
 
 module.exports = myApiPlugin;
+```
+
+A Table plugin will extent the baseTable class (lib/table/baseTable.js) and should implement the tableName, and schema methods.  The schema will be setup in knex.  A valid table plugin could look like the following:
+
+```javascript
+const baseTable = require('./baseTable');
+
+class myPlugin extends baseTable {
+
+  tableName() {
+    return 'my_plugin';
+  }
+
+  schema() {
+    return [
+      'id',
+      'uuid',
+      'timeStarted',
+      'timeUpdated',
+      'description',
+      'title'
+    ];
+  }
+}
+
+module.exports = myPlugin;
 ```
 
 ## Migrations

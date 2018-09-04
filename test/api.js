@@ -11,8 +11,12 @@ const knexConfig = require('../knexfile');
 const dbConfig = knexConfig[process.env.NODE_ENV];
 const knex = require('knex')(dbConfig);
 const builds = require('./fixtures/builds');
+const tablePluginClasses = [require('../lib/table/build')];
+const tablePlugins = tablePluginClasses.map(function(tablePluginClass) {
+  return new tablePluginClass({knex});
+});
 
-const db = new Db({knex});
+const db = new Db({knex, tablePlugins: tablePlugins});
 
 const projectId = 'c01f0f8c-9774-43e7-b717-5ca78bd44c01';
 const buildId = 'edae5055-db9e-4ae4-8863-7561cb6e0aa2';
@@ -125,6 +129,54 @@ describe('API', function() {
       response.statusCode.should.equal(200);
       let data = JSON.parse(response.body);
       data.should.equal('1001');
+      done(error);
+    });
+  });
+
+  it('creates and deletes a build', function(done) {
+    let postData = Object.assign({}, builds[0]);
+    postData.id = undefined;
+    postData.bytesReal = postData.diskSpace.realBytes;
+    postData.bytesVirtual = postData.diskSpace.virtualBytes;
+    postData.branchName = postData.branch.name;
+    postData.commitRef = postData.commit.ref;
+    postData.commitUrl = postData.commit.htmlUrl;
+    postData.timeStarted = postData.createdAt;
+    postData.timeUpdated = postData.updatedAt;
+     function deleteBuild(id) {
+      request.del(`http://localhost:${apiPort}/delete/build/${id}`, function(error, response, body) {
+        response.statusCode.should.equal(200);
+        let data = JSON.parse(response.body);
+        data.count.should.equal(1);
+      });
+    }
+    request.post({url: `http://localhost:${apiPort}/create/build`, json: postData}, function(error, response, body) {
+      response.statusCode.should.equal(200);
+      const newBuildId = response.body[0];
+      newBuildId.should.have.lengthOf(36);
+      deleteBuild(newBuildId);
+      done(error);
+    });
+  });
+
+  it('updates and returns content of a build', function(done) {
+    const putData = {
+      bytesReal: 12345,
+      bytesVirtual: 23456
+    }
+     function getBuild(id) {
+      request.get(`http://localhost:${apiPort}/get/build/${id}`, function(error, response, body) {
+        response.statusCode.should.equal(200);
+        let data = JSON.parse(response.body);
+        data.buildId.should.equal(buildId);
+        data.bytesReal.should.equal(putData.bytesReal.toString());
+      });
+    }
+    request.put({url: `http://localhost:${apiPort}/update/build/${buildId}`, json: putData}, function(error, response, body) {
+      response.statusCode.should.equal(200);
+      let data = response.body;
+      data.count.should.equal(1);
+      getBuild(buildId);
       done(error);
     });
   });

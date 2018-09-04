@@ -23,11 +23,12 @@
     "bunyan": "^1.8.10",
     "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
     "knex": "^0.13.0",
-    "knex-migrate": "^1.3.0",
+    "knex-migrate": "^1.5.0",
     "pg": "^6.2.2",
     "probo-eventbus": "^1.0.3",
     "restify": "^5.0.0",
     "through2": "^2.0.3",
+    "uuid": "^3.2.1",
     "yaml-config-loader": "^2.0.1",
     "yargs": "^8.0.2"
   },
@@ -35,7 +36,6 @@
     "mocha": "^3.4.2",
     "portfinder": "^1.0.13",
     "request": "^2.81.0",
-    "should": "^11.2.1",
-    "uuid": "^3.0.1"
+    "should": "^11.2.1"
   }
 }
