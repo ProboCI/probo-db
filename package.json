@@ -20,15 +20,13 @@
   },
   "homepage": "https://github.com/ProboCI/probo-db#readme",
   "dependencies": {
-    "bunyan": "^1.8.10",
-    "kafka-node": "git+https://github.com/tizzo/kafka-node.git#consumer-stream",
-    "knex": "^0.13.0",
-    "knex-migrate": "^1.3.0",
-    "pg": "^6.2.2",
-    "probo-eventbus": "^1.0.3",
-    "restify": "^5.0.0",
-    "through2": "^2.0.3",
-    "yaml-config-loader": "^2.0.1",
+    "bunyan": "^1.8.12",
+    "knex": "^0.19.0",
+    "knex-migrate": "^1.7.2",
+    "pg": "^7.11.0",
+    "probo-eventbus": "proboci/probo-eventbus#kafka-node",
+    "restify": "^8.3.3",
+    "yaml-config-loader": "^2.1.0",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
