@@ -24,7 +24,7 @@
     "knex": "^0.19.0",
     "knex-migrate": "^1.7.2",
     "pg": "^7.11.0",
-    "probo-eventbus": "proboci/probo-eventbus#kafka-node",
+    "probo-eventbus": "^1.0.5",
     "restify": "^8.3.3",
     "yaml-config-loader": "^2.1.0",
     "yargs": "^8.0.2"
