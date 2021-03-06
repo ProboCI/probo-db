@@ -101,7 +101,7 @@ describe('API', function() {
   });
 
   it('returns an array of builds', function(done) {
-    request.get(`http://localhost:${apiPort}/build/`, function(error, response, body) {
+    request.get(`http://localhost:${apiPort}/build`, function(error, response, body) {
       response.statusCode.should.equal(200);
       let data = JSON.parse(response.body);
       data.length.should.equal(8);
