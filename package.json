@@ -1,6 +1,6 @@
 {
   "name": "probo-db",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "An open source database for storing probo build data.",
   "main": "index.js",
   "scripts": {
