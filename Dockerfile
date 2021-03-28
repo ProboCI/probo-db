@@ -15,4 +15,4 @@ WORKDIR /home/probo/app
 
 EXPOSE 8442
 
-CMD ["bin/probo-db"]
+CMD ["sh", "/home/probo/app/bin/startup.sh"]
