@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+'use strict';
+
+const amqp = require('amqplib/callback_api');
+
+function start() {
+  amqp.connect('amqp://rabbitmq', function(connectError, connection) {
+    if (connectError) {
+      console.log(' [x] Unable to connect to RabbitMQ. Trying again in 5 seconds.');
+      setTimeout(start, 5000);
+    }
+    else {
+      console.log(' [+] Connected to RabbitMQ.');
+      process.exit(0);
+    }
+  });
+}
+
+start();

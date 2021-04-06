@@ -1,10 +1,11 @@
----
-buildsEventStream:
-  plugin: Kafka
-  config:
-    group: 'proboDb'
-    topic: 'build_events'
-    version: 1
+# ProboDB YAML Configuration
+# We have removed Kafka and Memory options and normalized on RabbitMQ
+# Translation: group = key, topic = exchange
+rabbit:
+  url: amqp://rabbitmq
+  exchange: buildEvents
+  key: proboDb.*
+
 pluginDirectory: null
 knex: {}
 port: 8442
