@@ -8,7 +8,6 @@ RUN mkdir -p /home/probo/app
 COPY . /home/probo/app
 RUN chown -R probo:probo /home/probo/app
 
-USER probo
 RUN cd /home/probo/app/ && npm install
 
 WORKDIR /home/probo/app
