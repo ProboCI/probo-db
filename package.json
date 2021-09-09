@@ -27,12 +27,12 @@
     "probo-eventbus": "^1.0.5",
     "restify": "^8.3.3",
     "yaml-config-loader": "^2.1.0",
-    "yargs": "^8.0.2"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "mocha": "^3.4.2",
+    "mocha": "^8.3.1",
     "portfinder": "^1.0.13",
-    "request": "^2.81.0",
+    "request": "^2.88.0",
     "should": "^11.2.1",
     "uuid": "^3.0.1"
   }
