@@ -30,7 +30,7 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "mocha": "^8.3.1",
+    "mocha": "^10.1.0",
     "portfinder": "^1.0.13",
     "request": "^2.88.0",
     "should": "^11.2.1",
