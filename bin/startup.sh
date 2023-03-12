@@ -5,4 +5,4 @@ if [ ! -e "/etc/probo/db-initialized" ]; then
   touch "/etc/probo/db-initialized"
 fi
 
-exec sh ./bin/probo-db -c /etc/probo/db.yaml -k /etc/probo/knexfile.js
+exec ./bin/probo-db -c /etc/probo/db.yaml -k /etc/probo/knexfile.js
