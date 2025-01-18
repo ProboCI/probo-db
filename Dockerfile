@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-FROM node:12-alpine
+FROM node:22-alpine
 
 RUN mkdir -p /home/probo/app
 COPY . /home/probo/app
