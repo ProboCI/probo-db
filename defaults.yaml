@@ -1,4 +1,6 @@
----
+host: 0.0.0.0
+port: 8442
+
 buildsEventStream:
   plugin: Kafka
   config:
@@ -6,8 +8,9 @@ buildsEventStream:
     topic: 'build_events'
     version: 1
 pluginDirectory: null
+
 knex: {}
-port: 8442
-host: localhost
+
 serverName: probodb
+
 version: '1.0.0'
