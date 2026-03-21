@@ -47,9 +47,7 @@ else
 fi
 
 if [[ -z $knexfile ]]; then
-  node_modules/.bin/knex-migrate up --env production
+  node_modules/.bin/knex migrate:latest --env production
 else
-  cp $knexfile $MY_PATH/../alt-knex.js
-  node_modules/.bin/knex-migrate up --env production --knexfile $MY_PATH/../alt-knex.js
-  rm $MY_PATH/../alt-knex.js
+  node_modules/.bin/knex migrate:latest --env production --knexfile $knexfile
 fi

@@ -4,9 +4,9 @@ A database service that consumes event data from an [eventbus](https://github.co
 
 The database is designed to be able to process and reprocess data from a system such as Apache Kafka. Therefore each step of the data processing and storage pipeline needs to be able to see the same piece of data multiple times without issue.
 
-The database is abstracted by [knex](http://knexjs.org/) and relies on postgres. Review the appropriate documentation for details on these projects.
+The database is abstracted by [knex](https://knexjs.org/) and relies on postgres. Review the appropriate documentation for details on these projects.
 
-The REST API is built using [Restify](http://restify.com/).
+The REST API is built using [Restify](https://github.com/restify/node-restify).
 
 ## Configuration
 
@@ -25,6 +25,39 @@ Configuration is also inherited from yaml config that can be passed in via the `
 If both options are used, the knex connection data from the yaml file will be used over that passed in via the knexfile.js.
 
 Since knex and migrations assume a `knexfile.js`, it is recommended to provide this rather than specifying configuration in the yaml file.
+
+### Eventbus / Kafka
+
+The service connects to a Kafka event stream to consume build events. The eventbus is configured in the YAML config under `buildsEventStream`:
+
+```yaml
+buildsEventStream:
+  plugin: Kafka
+  config:
+    group: 'proboDb'
+    topic: 'build_events'
+    version: 1
+```
+
+- `plugin` — The eventbus plugin to use (e.g. `Kafka`).
+- `group` — The Kafka consumer group name.
+- `topic` — The Kafka topic to consume build events from.
+
+## REST API
+
+The service exposes the following endpoints:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Returns version info |
+| HEAD | `/` | Returns version info |
+| GET | `/build` | List all build IDs |
+| GET | `/build/:build` | Get a build by UUID |
+| GET | `/build/:build/disk-usage` | Get disk usage for a build |
+| GET | `/project` | List all project IDs |
+| GET | `/project/:project/disk-usage` | Get total disk usage for a project (excludes reaped builds) |
+
+Build and project IDs are validated as UUIDs before processing.
 
 ## Plugins
 
@@ -82,7 +115,7 @@ class myApiPlugin {
 
   addRoutes(server) {
     let self = this;
-    server.addRoute('/some/route', function(req, res, next) {
+    server.get('/some/route', function(req, res, next) {
       self.knex
         .select('*')
         .from('mytable')
@@ -107,4 +140,26 @@ module.exports = myApiPlugin;
 
 Migrations are stored in the `baseMigrations` directory. Create these using knex.
 
-Plugins can also have migrations in order to add their own tables. Migrations are combined into a single folder and run together using `./bin/migrate`. To have your plugin’s migrations run, add them to a directory called `migrations` in the plugin's folder. See the knex migration documentation for more information on creating migrations.
+Plugins can also have migrations in order to add their own tables. Migrations are combined into a single folder and run together using `./bin/migrate`. To have your plugin's migrations run, add them to a directory called `migrations` in the plugin's folder. See the knex migration documentation for more information on creating migrations.
+
+## Docker
+
+Build and push the Docker image using:
+
+```
+./build.sh <repository_name> <tag>
+```
+
+For example, to build and push to DockerHub:
+
+```
+./build.sh mbagnall dev
+```
+
+Or to a private registry:
+
+```
+./build.sh docker.example.com/probo dev
+```
+
+The container exposes port 8442 and expects configuration files at `/etc/probo/db.yaml` and `/etc/probo/knexfile.js`. On first start, it runs migrations automatically before starting the server.

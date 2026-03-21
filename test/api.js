@@ -4,7 +4,6 @@ process.env.NODE_ENV = 'test';
 
 const should = require('should');
 const portfinder = require('portfinder');
-const request = require('request');
 const Db = require('../lib/Db');
 const Api = require('../lib/Api');
 const knexConfig = require('../knexfile');
@@ -57,76 +56,111 @@ describe('API', function() {
   });
 
   it('returns a 200 response on head requests', function(done) {
-    request.head(`http://localhost:${apiPort}/`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/`, {method: 'HEAD'})
+      .then(function(response) {
+        response.status.should.equal(200);
+        done();
+      })
+      .catch(done);
   });
 
   it('returns a version number', function(done) {
-    request.get(`http://localhost:${apiPort}/`, function(error, response, body) {
-      body.should.containEql('test-1.0.0');
-      response.statusCode.should.equal(200);
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        body.should.containEql('test-1.0.0');
+        done();
+      })
+      .catch(done);
   });
 
   it('returns an array of projects', function(done) {
-    request.get(`http://localhost:${apiPort}/project`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.length.should.equal(5);
-      body.should.containEql(projectId);
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/project`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        let data = JSON.parse(body);
+        data.length.should.equal(5);
+        body.should.containEql(projectId);
+        done();
+      })
+      .catch(done);
   });
 
-
   it('returns disk usage for a project', function(done) {
-    request.get(`http://localhost:${apiPort}/project/${projectId}/disk-usage`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.should.equal('2009');
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/project/${projectId}/disk-usage`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        let data = JSON.parse(body);
+        data.should.equal('2009');
+        done();
+      })
+      .catch(done);
   });
 
   it('returns the number zero for project disk usage if all builds are reaped', function(done) {
-    request.get(`http://localhost:${apiPort}/project/${reapedProjectId}/disk-usage`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.should.equal('0');
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/project/${reapedProjectId}/disk-usage`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        let data = JSON.parse(body);
+        data.should.equal('0');
+        done();
+      })
+      .catch(done);
   });
 
   it('returns an array of builds', function(done) {
-    request.get(`http://localhost:${apiPort}/build`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.length.should.equal(8);
-      body.should.containEql(buildId);
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/build`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        let data = JSON.parse(body);
+        data.length.should.equal(8);
+        body.should.containEql(buildId);
+        done();
+      })
+      .catch(done);
   });
 
   it('returns data for a build by id', function(done) {
-    request.get(`http://localhost:${apiPort}/build/${buildId}`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.branchName.should.equal('firstBranch');
-      data.prName.should.equal('firstPr');
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/build/${buildId}`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.json();
+      })
+      .then(function(data) {
+        data.branchName.should.equal('firstBranch');
+        data.prName.should.equal('firstPr');
+        done();
+      })
+      .catch(done);
   });
 
   it('returns the disk usage for a build by id', function(done) {
-    request.get(`http://localhost:${apiPort}/build/${buildId}/disk-usage`, function(error, response, body) {
-      response.statusCode.should.equal(200);
-      let data = JSON.parse(response.body);
-      data.should.equal('1001');
-      done(error);
-    });
+    fetch(`http://localhost:${apiPort}/build/${buildId}/disk-usage`)
+      .then(function(response) {
+        response.status.should.equal(200);
+        return response.text();
+      })
+      .then(function(body) {
+        let data = JSON.parse(body);
+        data.should.equal('1001');
+        done();
+      })
+      .catch(done);
   });
 
 });

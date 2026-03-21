@@ -1,6 +1,6 @@
 'use strict';
 
-const uuidV4 = require('uuid/v4');
+const { v4: uuidV4 } = require('uuid');
 
 let prNum = 0;
 
@@ -33,7 +33,7 @@ function createEntry(build) {
   };
 }
 
-exports.seed = function(knex, Promise) {
+exports.seed = function(knex) {
   // Reset the counter if this is run again.
   prNum = 0;
   // Deletes ALL existing entries
