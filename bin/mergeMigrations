@@ -34,27 +34,38 @@ loader.load(function(error, config) {
   let migrationDir = path.resolve(path.join(__dirname, '..', 'migrations'));
   let pluginMigrationDir = config.pluginDirectory !== null ? path.resolve(path.join(config.pluginDirectory, 'migrations')) : null;
 
+  function copyFiles(srcDir, files, done) {
+    let pending = files.length;
+    if (!pending) return done();
+    files.forEach(function(file) {
+      let dest = fs.createWriteStream(path.join(migrationDir, file));
+      dest.on('finish', function() {
+        if (--pending === 0) done();
+      });
+      dest.on('error', function(err) {
+        console.error(err);
+        process.exit(1);
+      });
+      fs.createReadStream(path.join(srcDir, file)).pipe(dest);
+    });
+  }
+
   fs.readdir(baseMigrationDir, function(error, files) {
     if (error) {
       console.error(error);
       process.exit(1);
     }
-    files.forEach(function(file) {
-      fs.createReadStream(path.join(baseMigrationDir, file))
-        .pipe(fs.createWriteStream(path.join(migrationDir, file)));
 
+    copyFiles(baseMigrationDir, files, function() {
+      if (!pluginMigrationDir) return;
+
+      fs.readdir(pluginMigrationDir, function(error, files) {
+        if (error) {
+          console.error(error);
+          process.exit(1);
+        }
+        copyFiles(pluginMigrationDir, files, function() {});
+      });
     });
   });
-
-  if (pluginMigrationDir) {
-    fs.readdir(pluginMigrationDir, function(error, files) {
-      if (error) {
-        console.error(error);
-        process.exit(1);
-      }
-      files.forEach(function(file) {
-        fs.createReadStream(path.join(pluginMigrationDir, file))
-          .pipe(fs.createWriteStream(path.join(migrationDir, file)));    });
-    });
-  }
 });
