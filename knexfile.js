@@ -1,7 +1,7 @@
 module.exports = {
 
   test: {
-    client: 'postgresql',
+    client: 'pg',
     connection: {
       database: 'probodb_test',
       user:     'probodb_test',
@@ -18,7 +18,7 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
+    client: 'pg',
     connection: {
       database: 'probodb',
       user:     'probodb',
