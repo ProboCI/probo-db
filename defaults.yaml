@@ -4,9 +4,13 @@ port: 8442
 buildsEventStream:
   plugin: Kafka
   config:
-    group: 'proboDb'
-    topic: 'build_events'
+    groupId: 'proboDb'
+    consumerTopic: 'build_events'
+    brokers:
+      - 'localhost:9092'
+    clientId: 'probo-db'
     version: 1
+
 pluginDirectory: null
 
 knex: {}
