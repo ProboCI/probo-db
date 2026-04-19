@@ -24,7 +24,7 @@
     "express": "^5.2.1",
     "knex": "^3.1.0",
     "pg": "^8.20.0",
-    "probo-eventbus": "github:proboci/probo-eventbus#offset",
+    "probo-eventbus": "github:proboci/probo-eventbus#kafkajs",
     "yaml-config-loader": "^2.1.0",
     "yargs": "^18.0.0"
   },
