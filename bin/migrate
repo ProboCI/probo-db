@@ -46,8 +46,10 @@ else
   ./bin/mergeMigrations -c $config
 fi
 
+APP_DIR="`( cd \"$MY_PATH/..\" && pwd )`"
+
 if [[ -z $knexfile ]]; then
-  node_modules/.bin/knex migrate:latest --env production
+  node_modules/.bin/knex migrate:latest --env production --cwd "$APP_DIR"
 else
-  node_modules/.bin/knex migrate:latest --env production --knexfile $knexfile
+  node_modules/.bin/knex migrate:latest --env production --knexfile $knexfile --cwd "$APP_DIR"
 fi
